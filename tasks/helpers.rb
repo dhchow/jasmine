@@ -40,11 +40,16 @@ end
 
 def script_tags_for(files)
   script_tag = Tilt::new('./spec/templates/script_tag.html.erb')
+  coffeescript_tag = Tilt::new('./spec/templates/coffeescript_tag.html.erb')
 
   srcs = (files.is_a?(String) ? [files] : files)
   srcs.inject([]) do |tags, f|
     scope = OpenStruct.new :file => f
-    tags << script_tag.render(scope)
+    if f.split('.').last == 'coffee'
+      tags << coffeescript_tag.render(scope)
+    else
+      tags << script_tag.render(scope)
+    end
     tags
   end.join("\n  ")
 end
